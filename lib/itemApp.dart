@@ -12,10 +12,9 @@ class ItemApp extends HookWidget {
   final String description;
   final String urlImg;
   final List<Color> backgroundColors;
+  final _providerButton = StateProvider((_) => Colors.white);
 
   ItemApp({@required this.name, @required this.description, @required this.urlImg, @required this.backgroundColors});
-
-  final _providerButton = StateProvider((_) => Colors.white);
 
 
   @override
@@ -51,7 +50,7 @@ class ItemApp extends HookWidget {
                             ),
                           ),
                           MouseRegion(
-                            onEnter: (_) => context.read(_providerButton).state = Colors.black87,
+                            onEnter: (_) => context.read(_providerButton).state = Color(0xFF253847),
                             onExit: (_) => context.read(_providerButton).state = Colors.white,
                             child: Container(
                               height: 45,

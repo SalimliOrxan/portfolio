@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animator/flutter_animator.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:portfolio/itemApp.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatefulHookWidget {
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -11,78 +14,101 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  final _providerButtonProjects = StateProvider((_) => Colors.white);
+  final _providerButtonContact  = StateProvider((_) => false);
+  final List<Color>_colors = [Color(0xFF286474), Color(0xFF286464), Color(0xFF286454)];
   double _width, _height;
-  List<ItemApp>items;
-
-  @override
-  void initState() {
-    super.initState();
-
-    items = [
-      ItemApp(
-          name: 'SMART DRAFT',
-          description: 'DraftKings, a cross platform experience for NFL Daily Fantasy Sports, is the smartest and fastest way to draft. Users join contests and develop a team according to players’ salary valuations, which stem from historical accomplishments. Player data and ratings are aggregated in order to facilitate a seamless crafting process for your successful Daily Fantasy Sports roster. You have the ability to see how each player affects the team, but also be strategic in how you draft with the constraint of a 50,000 salary cap for a cash or tournament experience.',
-          urlImg: 'https://lithiosapps.com/wp-content/uploads/2019/01/draft-kings-mockup.png',
-          backgroundColors: [Color(0xFF80bc00), Color(0xFF9ae102)]
-      ),
-      ItemApp(
-          name: 'CADIANT TOUCHSCREEN CONTROLS',
-          description: 'description',
-          urlImg: 'https://lithiosapps.com/wp-content/uploads/2019/04/cree-mockup.png',
-          backgroundColors: [Color(0xFF005596), Color(0xFF0081e3)]
-      ),
-      ItemApp(
-          name: 'BAYER MEMOOD APP',
-          description: 'description',
-          urlImg: 'https://lithiosapps.com/wp-content/uploads/2019/01/bayer-mockup.png',
-          backgroundColors: [Color(0xFF0090c3), Color(0xFF00bcff)]
-      ),
-      ItemApp(
-          name: 'INTEL DRONE PLATFORM',
-          description: 'description',
-          urlImg: 'https://lithiosapps.com/wp-content/uploads/2019/01/intel-mockup.png',
-          backgroundColors: [Color(0xFF02aaa9), Color(0xFF04d6d4)]
-      )
-    ];
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _body()
+        appBar: _appBar(),
+        body: _body()
+    );
+  }
+
+  Widget _appBar(){
+    return AppBar(
+      backgroundColor: Colors.white,
+      flexibleSpace: Stack(
+        alignment: Alignment.centerRight,
+        children: [
+          Positioned(
+            right: 50,
+            child: Row(
+                children: [
+                  Container(
+                      height: 35,
+                      width: 140,
+                      child: TextButton(
+                          onPressed: () => context.read(_providerButtonContact).state = !context.read(_providerButtonContact).state,
+                          child: Text(
+                              'CONTACT ME',
+                              style: GoogleFonts.montserrat(
+                                  textStyle: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold)
+                              )
+                          ),
+                          style: ButtonStyle(backgroundColor: MaterialStateColor.resolveWith((_) => Color(0xFF253847)))
+                      )
+                  ),
+                  Visibility(
+                      visible: useProvider(_providerButtonContact).state ,
+                      child: FadeInLeft(
+                        child: Row(
+                          children: [
+                            InkWell(
+                                onTap: (){
+
+                                },
+                                child: Container(width: 55, child: SvgPicture.asset('assets/images/facebook.svg', height: 30, width: 30))
+                            ),
+                            InkWell(
+                                onTap: (){
+
+                                },
+                                child: Container(width: 55, child: SvgPicture.asset('assets/images/linkedin.svg', height: 30, width: 30))
+                            ),
+                            InkWell(
+                                onTap: (){
+
+                                },
+                                child: Container(width: 55, child: SvgPicture.asset('assets/images/gmail.svg', height: 30, width: 30))
+                            )
+                          ]
+                        ),
+                      )
+                  )
+                ]
+            ),
+          ),
+        ],
+      )
     );
   }
 
   Widget _body(){
     return LayoutBuilder(
-      builder: (context, constraints){
-        _width  = constraints.maxWidth;
-        _height = constraints.maxHeight;
-
-        return Scrollbar(
-          showTrackOnHover: true,
-          child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            child: Column(
-              children: [
-                _header(),
-                _title2(),
-                for(ItemApp item in items) item,
-                _footer()
-              ]
-            )
-          )
-        );
-      }
+        builder: (context, constraints){
+          _width  = constraints.maxWidth;
+          _height = constraints.maxHeight;
+          return _header();
+        }
     );
   }
 
   Widget _header(){
     return Container(
-      height: 600,
-      width: double.infinity,
-      color: Color(0xFF253847),
-      child: _title()
+        width: double.infinity,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: _colors)
+        ),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _title(),
+              _button()
+            ]
+        )
     );
   }
 
@@ -90,71 +116,117 @@ class _HomePageState extends State<HomePage> {
     return Padding(
         padding: EdgeInsets.only(left: _width * 0.1, top: 200),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Text(
-                  'My Portfolio',
-                  style: GoogleFonts.montserrat(
-                      textStyle: TextStyle(fontSize: 60, color: Colors.white, fontWeight: FontWeight.bold)
-                  )
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FadeInUp(
+                child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Text(
+                        'Mobile Developer',
+                        style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(fontSize: 60, color: Colors.white, fontWeight: FontWeight.bold)
+                        )
+                    )
+                ),
               ),
-            ),
-            Container(
-              width: _width * 0.4,
-              child: Text(
-                  'A collection of diverse projects demonstrating the creativity, spectrum, and intuitiveness of our work with both large brands like DraftKings and local startups like Operation36 Golf.',
-                  style: GoogleFonts.montserrat(
-                      textStyle: TextStyle(fontSize: 16, color: Colors.white)
-                  )
-              ),
-            )
-          ]
+              Column(
+                  children: [
+                    FadeInUp(
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            SvgPicture.asset('assets/images/flutter.svg', width: 30),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                  'Flutter android and ios development',
+                                  style: GoogleFonts.montserrat(
+                                      textStyle: TextStyle(fontSize: 16, color: Colors.white)
+                                  )
+                              ),
+                            )
+                          ]
+                      ),
+                    ),
+                    FadeInUp(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              SvgPicture.asset('assets/images/android.svg', width: 30),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Text(
+                                    'Native android development',
+                                    style: GoogleFonts.montserrat(
+                                        textStyle: TextStyle(fontSize: 16, color: Colors.white)
+                                    )
+                                ),
+                              )
+                            ]
+                        ),
+                      ),
+                    )
+                  ]
+              )
+            ]
         )
     );
   }
 
-  Widget _title2(){
-    return Container(
-          color: Colors.white,
-          height: 250,
-          width: double.infinity,
-          child: Align(
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
+  Widget _button(){
+    return Padding(
+        padding: EdgeInsets.only(left: _width * 0.1, top: 70),
+        child: MouseRegion(
+          onEnter: (_) => context.read(_providerButtonProjects).state = Color(0xFF253847),
+          onExit: (_) => context.read(_providerButtonProjects).state = Colors.white,
+          child: FadeInUp(
+            child: Container(
+                height: 45,
+                width: 200,
+                child: TextButton(
+                    onPressed: () => Navigator.pushNamed(context, 'product'),
                     child: Text(
-                        'We Take Pride in Our Work',
+                        'SEE PROJECTS',
                         style: GoogleFonts.montserrat(
-                          textStyle: TextStyle(fontSize: 35, color: Colors.black, fontWeight: FontWeight.bold)
+                            textStyle: TextStyle(fontSize: 16, color: _colors[0], fontWeight: FontWeight.bold)
                         )
+                    ),
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateColor.resolveWith((_) => context.read(_providerButtonProjects).state)
                     )
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: _width * 0.25),
-                    child: Text(
-                        'Every business has unique problems that can be fixed with the right software solution. At Lithios we believe that software should be intuitive, simple, and should solve these business problems. We strive to build the best possible solutions to our clients problems. Below are a few product solutions we have developed for startups and Fortune 500 companies.',
-                        style: GoogleFonts.montserrat(
-                          textStyle: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.normal)
-                        ),
-                        textAlign: TextAlign.center
-                    )
-                  )
-                ]
-              )
-          )
-      );
+                )
+            ),
+          ),
+        )
+    );
   }
 
-  Widget _footer(){
-    return Container(
-        height: 200,
-        width: double.infinity,
-        color: Colors.black
+
+  void showContacts() async {
+    await showMenu(
+        context: context,
+        position: RelativeRect.fromLTRB(_width - 190, 60, 50, 0),
+        color: Colors.transparent,
+        elevation: 0,
+        items: <PopupMenuEntry<String>>[
+          PopupMenuItem(
+              height: 50,
+              value: 'fb',
+              child: Center(child: SvgPicture.asset('assets/images/facebook.svg', height: 30, width: 30))
+          ),
+          PopupMenuItem(
+              height: 50,
+              value: 'ln',
+              child: Center(child: SvgPicture.asset('assets/images/linkedin.svg', height: 30, width: 30, color: Colors.blue))
+          ),
+          PopupMenuItem(
+              height: 50,
+              value: 'gm',
+              child: Center(child: SvgPicture.asset('assets/images/gmail.svg', height: 30, width: 30))
+          )
+        ]
     );
   }
 }
