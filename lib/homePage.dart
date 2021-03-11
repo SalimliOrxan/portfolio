@@ -202,31 +202,4 @@ class _HomePageState extends State<HomePage> {
         )
     );
   }
-
-
-  void showContacts() async {
-    await showMenu(
-        context: context,
-        position: RelativeRect.fromLTRB(_width - 190, 60, 50, 0),
-        color: Colors.transparent,
-        elevation: 0,
-        items: <PopupMenuEntry<String>>[
-          PopupMenuItem(
-              height: 50,
-              value: 'fb',
-              child: Center(child: SvgPicture.asset('assets/images/facebook.svg', height: 30, width: 30))
-          ),
-          PopupMenuItem(
-              height: 50,
-              value: 'ln',
-              child: Center(child: SvgPicture.asset('assets/images/linkedin.svg', height: 30, width: 30, color: Colors.blue))
-          ),
-          PopupMenuItem(
-              height: 50,
-              value: 'gm',
-              child: Center(child: SvgPicture.asset('assets/images/gmail.svg', height: 30, width: 30))
-          )
-        ]
-    );
-  }
 }

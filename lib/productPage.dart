@@ -54,22 +54,20 @@ class _ProductState extends State<ProductPage> {
   }
 
   Widget _body(){
-    return Scrollbar(
-        showTrackOnHover: true,
-        child: SingleChildScrollView(
-            child: LayoutBuilder(
-                builder: (context, constraints){
-                  _width  = constraints.maxWidth;
-                  _height = constraints.maxHeight;
+    return LayoutBuilder(
+        builder: (context, constraints){
+          _width  = constraints.maxWidth;
+          _height = constraints.maxHeight;
 
-                  return ListView.builder(
-                    itemCount: items.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) => items[index]
-                  );
-                }
+          return Scrollbar(
+            showTrackOnHover: true,
+            child: ListView.builder(
+              itemCount: items.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) => items[index]
             )
-        )
+          );
+        }
     );
   }
 }
